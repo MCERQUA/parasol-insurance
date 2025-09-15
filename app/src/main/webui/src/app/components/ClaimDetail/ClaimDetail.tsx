@@ -20,16 +20,72 @@ const ClaimDetail: React.FunctionComponent<ClaimProps> = () => {
 
   React.useEffect(() => {
     // Mock claim data for when backend is not available
-    const mockClaim = {
+    const mockClaimsData = {
+      '1': {
+        id: 1,
+        claim_number: 'CLM-2024-001',
+        category: 'Auto',
+        client_name: 'John Doe',
+        policy_number: 'POL-AUTO-12345',
+        status: 'Flagged',
+        fraud_score: 85,
+        amount: 45000,
+        date_of_loss: '2024-01-15',
+        location: '123 Remote Highway, Nevada',
+        description: 'Total loss claim for luxury vehicle. Accident occurred late at night on remote highway.',
+        red_flags: ['Multiple claims in 6 months', 'Claim filed immediately after policy start', 'High value claim'],
+        investigation_notes: 'Customer has filed 3 claims in the past 6 months. Policy was purchased just 2 weeks before incident.',
+        original_images: [{image_name: `images/original_car1.jpg`, image_key: `src/app/assets/images/original_car1.jpg`, claim_id: '1'}],
+        processed_images: [{image_name: `images/car1-processed.jpg`, image_key: `src/app/assets/images/car1-processed.jpg`, claim_id: '1'}]
+      },
+      '3': {
+        id: 3,
+        claim_number: 'CLM-2024-003',
+        category: 'Auto',
+        client_name: 'Bob Johnson',
+        policy_number: 'POL-AUTO-54321',
+        status: 'Under Investigation',
+        fraud_score: 92,
+        amount: 68000,
+        date_of_loss: '2024-01-18',
+        location: 'Desert Road, Arizona',
+        description: 'Vehicle allegedly stolen and found burned. No witnesses to theft.',
+        red_flags: ['Accident in remote location', 'No police report filed immediately', 'Conflicting witness statements', 'Vehicle had financial issues'],
+        investigation_notes: 'Vehicle had outstanding loan. Customer was 3 months behind on payments. No surveillance footage available.',
+        original_images: [{image_name: `images/original_car3.jpg`, image_key: `src/app/assets/images/original_car3.jpg`, claim_id: '3'}],
+        processed_images: [{image_name: `images/car3-processed.jpg`, image_key: `src/app/assets/images/car3-processed.jpg`, claim_id: '3'}]
+      },
+      '7': {
+        id: 7,
+        claim_number: 'CLM-2024-007',
+        category: 'Life',
+        client_name: 'Robert Wilson',
+        policy_number: 'POL-LIFE-33333',
+        status: 'Under Investigation',
+        fraud_score: 95,
+        amount: 500000,
+        date_of_loss: '2024-01-22',
+        location: 'Miami, Florida',
+        description: 'Life insurance claim. Suspicious circumstances surrounding death.',
+        red_flags: ['Policy purchased 2 months ago', 'Beneficiary recently changed', 'Large policy amount', 'Suspicious circumstances'],
+        investigation_notes: 'Policy purchased shortly before incident. Beneficiary changed 1 week before claim. Investigating circumstances.',
+        original_images: [],
+        processed_images: []
+      }
+    };
+
+    const mockClaim = mockClaimsData[claim_id] || {
       id: claim_id,
       claim_number: `CLM-2024-00${claim_id}`,
       category: "Auto",
-      client_name: "John Doe",
+      client_name: "Jane Smith",
       policy_number: `POL-AUTO-${claim_id}2345`,
-      status: "In Review",
-      date_of_loss: "2024-01-15",
+      status: "Processing",
+      fraud_score: 15,
+      amount: 8500,
+      date_of_loss: "2024-01-10",
       location: "123 Main St, Springfield",
-      description: "Minor collision at intersection. No injuries reported.",
+      description: "Minor fender bender in parking lot. Police report filed.",
       original_images: [{image_name: `images/original_car${claim_id}.jpg`, image_key: `src/app/assets/images/original_car${claim_id}.jpg`, claim_id: `${claim_id}`}],
       processed_images: [{image_name: `images/car${claim_id}-processed.jpg`, image_key: `src/app/assets/images/car${claim_id}-processed.jpg`, claim_id: `${claim_id}`}]
     };

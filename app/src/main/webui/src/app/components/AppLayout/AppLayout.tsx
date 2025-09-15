@@ -1,5 +1,4 @@
 import imgAvatar from '@app/assets/bgimages/avatar-user.svg';
-import logo from '@app/assets/bgimages/parasol-logo.svg';
 import { IAppRoute, IAppRouteGroup, routes } from '@app/routes';
 import {
   Avatar,
@@ -79,7 +78,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
       </MastheadToggle>
       <MastheadMain>
         <MastheadBrand>
-          <Brand src={logo} alt="Patternfly Logo" heights={{ default: '36px' }} />
+          <Brand src="https://contractorschoiceagency.com/_next/image?url=%2Fimages%2Flogo%2FCCA-logo-grey.webp&w=256&q=75" alt="CCA Logo" heights={{ default: '36px' }} />
         </MastheadBrand>
       </MastheadMain>
       <MastheadContent>

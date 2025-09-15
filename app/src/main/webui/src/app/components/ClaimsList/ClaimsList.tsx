@@ -13,11 +13,15 @@ interface Row {
     client_name: string;
     policy_number: string;
     status: string;
+    fraud_score?: number;
+    amount?: number;
+    date_filed?: string;
+    red_flags?: string[];
 }
 
 const ClaimsList: React.FunctionComponent = () => {
 
-    // Mock data for when backend is not available
+    // Mock data for when backend is not available - Enhanced with fraud indicators
     const mockClaims = [
         {
             id: 1,
@@ -25,7 +29,11 @@ const ClaimsList: React.FunctionComponent = () => {
             category: "Auto",
             client_name: "John Doe",
             policy_number: "POL-AUTO-12345",
-            status: "In Review"
+            status: "Flagged",
+            fraud_score: 85,
+            amount: 45000,
+            date_filed: "2024-01-15",
+            red_flags: ["Multiple claims in 6 months", "Claim filed immediately after policy start"]
         },
         {
             id: 2,
@@ -33,7 +41,10 @@ const ClaimsList: React.FunctionComponent = () => {
             category: "Home",
             client_name: "Jane Smith",
             policy_number: "POL-HOME-67890",
-            status: "Approved"
+            status: "Approved",
+            fraud_score: 15,
+            amount: 8500,
+            date_filed: "2024-01-10"
         },
         {
             id: 3,
@@ -41,7 +52,68 @@ const ClaimsList: React.FunctionComponent = () => {
             category: "Auto",
             client_name: "Bob Johnson",
             policy_number: "POL-AUTO-54321",
-            status: "Pending"
+            status: "Under Investigation",
+            fraud_score: 92,
+            amount: 68000,
+            date_filed: "2024-01-18",
+            red_flags: ["Accident in remote location", "No police report", "Conflicting witness statements"]
+        },
+        {
+            id: 4,
+            claim_number: "CLM-2024-004",
+            category: "Health",
+            client_name: "Alice Williams",
+            policy_number: "POL-HEALTH-98765",
+            status: "Approved",
+            fraud_score: 8,
+            amount: 3200,
+            date_filed: "2024-01-05"
+        },
+        {
+            id: 5,
+            claim_number: "CLM-2024-005",
+            category: "Auto",
+            client_name: "Michael Chen",
+            policy_number: "POL-AUTO-11111",
+            status: "Flagged",
+            fraud_score: 78,
+            amount: 52000,
+            date_filed: "2024-01-20",
+            red_flags: ["Previous fraudulent claim", "Inconsistent damage description"]
+        },
+        {
+            id: 6,
+            claim_number: "CLM-2024-006",
+            category: "Home",
+            client_name: "Sarah Davis",
+            policy_number: "POL-HOME-22222",
+            status: "Processing",
+            fraud_score: 22,
+            amount: 12000,
+            date_filed: "2024-01-12"
+        },
+        {
+            id: 7,
+            claim_number: "CLM-2024-007",
+            category: "Life",
+            client_name: "Robert Wilson",
+            policy_number: "POL-LIFE-33333",
+            status: "Under Investigation",
+            fraud_score: 95,
+            amount: 500000,
+            date_filed: "2024-01-22",
+            red_flags: ["Policy purchased 2 months ago", "Beneficiary recently changed", "Suspicious circumstances"]
+        },
+        {
+            id: 8,
+            claim_number: "CLM-2024-008",
+            category: "Auto",
+            client_name: "Emma Thompson",
+            policy_number: "POL-AUTO-44444",
+            status: "Approved",
+            fraud_score: 5,
+            amount: 4500,
+            date_filed: "2024-01-08"
         }
     ];
 
@@ -75,6 +147,10 @@ const ClaimsList: React.FunctionComponent = () => {
         client_name: claim.client_name,
         policy_number: claim.policy_number,
         status: claim.status,
+        fraud_score: claim.fraud_score,
+        amount: claim.amount,
+        date_filed: claim.date_filed,
+        red_flags: claim.red_flags
     }));
 
     // Filter and sort
@@ -108,7 +184,8 @@ const ClaimsList: React.FunctionComponent = () => {
         claim_number: 'Claim Number',
         category: 'Category',
         client_name: 'Client Name',
-        policy_number: 'Policy Number',
+        amount: 'Amount',
+        fraud_score: 'Risk Score',
         status: 'Status'
     }
 
@@ -165,9 +242,33 @@ const ClaimsList: React.FunctionComponent = () => {
     // Custom render for the status column
     const labelColors = {
         'Processed': 'green',
+        'Approved': 'green',
         'New': 'blue',
+        'Processing': 'blue',
         'Denied': 'red',
+        'Flagged': 'red',
+        'Under Investigation': 'orange',
         'In Process': 'gold'
+    };
+
+    // Function to get risk color based on fraud score
+    const getRiskColor = (score: number | undefined) => {
+        if (!score) return 'grey';
+        if (score >= 75) return 'red';
+        if (score >= 50) return 'orange';
+        if (score >= 25) return 'gold';
+        return 'green';
+    };
+
+    // Format amount as currency
+    const formatCurrency = (amount: number | undefined) => {
+        if (!amount) return '-';
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(amount);
     };
 
     return (
@@ -226,23 +327,35 @@ const ClaimsList: React.FunctionComponent = () => {
                     <Table aria-label="Claims list" isStickyHeader>
                         <Thead>
                             <Tr>
-                                <Th sort={getSortParams(1)} width={10}>{columnNames.claim_number}</Th>
+                                <Th sort={getSortParams(1)} width={15}>{columnNames.claim_number}</Th>
                                 <Th sort={getSortParams(2)} width={10}>{columnNames.category}</Th>
-                                <Th sort={getSortParams(3)} width={10}>{columnNames.client_name}</Th>
-                                <Th sort={getSortParams(4)} width={10}>{columnNames.policy_number}</Th>
-                                <Th sort={getSortParams(5)} width={10}>{columnNames.status}</Th>
+                                <Th sort={getSortParams(3)} width={20}>{columnNames.client_name}</Th>
+                                <Th width={15}>{columnNames.amount}</Th>
+                                <Th width={15}>{columnNames.fraud_score}</Th>
+                                <Th sort={getSortParams(5)} width={15}>{columnNames.status}</Th>
                             </Tr>
                         </Thead>
                         <Tbody>
                             {sortedRows.map((row, rowIndex) => (
-                                <Tr key={rowIndex}>
+                                <Tr key={rowIndex} style={{
+                                    backgroundColor: row.fraud_score && row.fraud_score >= 75 ? 'rgba(255, 0, 0, 0.05)' : 'transparent'
+                                }}>
                                     <Td dataLabel={columnNames.claim_number}>
                                         <Link to={`/ClaimDetail/${row.id}`}>{row.claim_number}</Link>
                                     </Td>
                                     <Td dataLabel={columnNames.category}>{row.category}</Td>
                                     <Td dataLabel={columnNames.client_name}>{row.client_name}</Td>
-                                    <Td dataLabel={columnNames.policy_number}>{row.policy_number}</Td>
-                                    <Td dataLabel={columnNames.status}><Label color={labelColors[row.status] || 'default'}>{row.status}</Label></Td>
+                                    <Td dataLabel={columnNames.amount}>
+                                        <strong>{formatCurrency(row.amount)}</strong>
+                                    </Td>
+                                    <Td dataLabel={columnNames.fraud_score}>
+                                        <Label color={getRiskColor(row.fraud_score)}>
+                                            {row.fraud_score ? `${row.fraud_score}%` : '-'}
+                                        </Label>
+                                    </Td>
+                                    <Td dataLabel={columnNames.status}>
+                                        <Label color={labelColors[row.status] || 'default'}>{row.status}</Label>
+                                    </Td>
                                 </Tr>
                             ))}
                         </Tbody>
