@@ -18,14 +18,50 @@ interface Row {
 const ClaimsList: React.FunctionComponent = () => {
 
     // Claims data
-    const [claims, setClaims] = React.useState([]);
+    const [claims, setClaims] = React.useState<any[]>([]);
+    const [isLoading, setIsLoading] = React.useState(true);
+    const [hasError, setHasError] = React.useState(false);
+
     React.useEffect(() => {
+        // Mock data for when backend is not available
+        const mockClaims = [
+            {
+                id: 1,
+                claim_number: "CLM-2024-001",
+                category: "Auto",
+                client_name: "John Doe",
+                policy_number: "POL-AUTO-12345",
+                status: "In Review"
+            },
+            {
+                id: 2,
+                claim_number: "CLM-2024-002",
+                category: "Home",
+                client_name: "Jane Smith",
+                policy_number: "POL-HOME-67890",
+                status: "Approved"
+            },
+            {
+                id: 3,
+                claim_number: "CLM-2024-003",
+                category: "Auto",
+                client_name: "Bob Johnson",
+                policy_number: "POL-AUTO-54321",
+                status: "Pending"
+            }
+        ];
+
         axios.get(config.backend_api_url + '/db/claims')
             .then(response => {
                 setClaims(response.data);
+                setIsLoading(false);
             })
             .catch(error => {
-                console.error(error);
+                console.error('Backend not available, using mock data:', error);
+                // Use mock data when backend is not available
+                setClaims(mockClaims);
+                setHasError(true);
+                setIsLoading(false);
             });
     }, []);
 

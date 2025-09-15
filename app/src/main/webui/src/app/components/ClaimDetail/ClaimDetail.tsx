@@ -19,6 +19,21 @@ const ClaimDetail: React.FunctionComponent<ClaimProps> = () => {
   const [claim, setClaim] = React.useState<any>({});
 
   React.useEffect(() => {
+    // Mock claim data for when backend is not available
+    const mockClaim = {
+      id: claim_id,
+      claim_number: `CLM-2024-00${claim_id}`,
+      category: "Auto",
+      client_name: "John Doe",
+      policy_number: `POL-AUTO-${claim_id}2345`,
+      status: "In Review",
+      date_of_loss: "2024-01-15",
+      location: "123 Main St, Springfield",
+      description: "Minor collision at intersection. No injuries reported.",
+      original_images: [{image_name: `images/original_car${claim_id}.jpg`, image_key: `src/app/assets/images/original_car${claim_id}.jpg`, claim_id: `${claim_id}`}],
+      processed_images: [{image_name: `images/car${claim_id}-processed.jpg`, image_key: `src/app/assets/images/car${claim_id}-processed.jpg`, claim_id: `${claim_id}`}]
+    };
+
     axios.get(config.backend_api_url + `/db/claims/${claim_id}`)
       .then((response) => {
         response.data.original_images = [{image_name: `images/original_car${claim_id}.jpg`, image_key: `src/app/assets/images/original_car${claim_id}.jpg`, claim_id: `${claim_id}`}];
@@ -29,7 +44,9 @@ const ClaimDetail: React.FunctionComponent<ClaimProps> = () => {
         setClaim(response.data);
       })
       .catch(error => {
-        console.error(error);
+        console.error('Backend not available, using mock data:', error);
+        // Use mock data when backend is not available
+        setClaim(mockClaim);
       });
 
   }, [claim_id]);
