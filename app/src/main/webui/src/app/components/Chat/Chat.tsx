@@ -22,30 +22,39 @@ const Chat: React.FunctionComponent<{ claimSummary: string, claimId: string, inc
     const wsUrl = config.backend_api_url.replace(/http/, 'ws').replace(/\/api$/, '/ws');
 
     const connection = React.useRef<WebSocket | null>(null);
-    const chatBotAnswer = document.getElementById('chatBotAnswer');
 
     React.useEffect(() => {
-        const ws = new WebSocket(wsUrl + '/query') || {};
+        try {
+            const ws = new WebSocket(wsUrl + '/query');
 
-        ws.onopen = () => {
-            console.log('opened ws connection')
-        }
-        ws.onclose = (e) => {
-            console.log('close ws connection: ', e.code, e.reason)
-        }
-
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data['type'] === 'token') {
-                setAnswerText(answerText => [...answerText, data['token']]);
-                return
-            } else if (data['type'] === 'source') {
-                setAnswerSources(answerSources => [...answerSources, data['source']]);
-                return
+            ws.onopen = () => {
+                console.log('opened ws connection')
             }
-        }
+            ws.onerror = (error) => {
+                console.log('WebSocket error:', error);
+                // Don't set connection if there's an error
+            }
+            ws.onclose = (e) => {
+                console.log('close ws connection: ', e.code, e.reason)
+            }
 
-        connection.current = ws;
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data['type'] === 'token') {
+                    setAnswerText(answerText => [...answerText, data['token']]);
+                    return
+                } else if (data['type'] === 'source') {
+                    setAnswerSources(answerSources => [...answerSources, data['source']]);
+                    return
+                }
+            }
+
+            connection.current = ws;
+        } catch (error) {
+            console.log('Failed to create WebSocket connection:', error);
+            // Set a null connection to indicate failure
+            connection.current = null;
+        }
 
         // Clean up function
         return () => {
@@ -57,6 +66,7 @@ const Chat: React.FunctionComponent<{ claimSummary: string, claimId: string, inc
     }, [])
 
     React.useEffect(() => {
+        const chatBotAnswer = document.getElementById('chatBotAnswer');
         if (chatBotAnswer) {
             chatBotAnswer.scrollTop = chatBotAnswer.scrollHeight;
         }

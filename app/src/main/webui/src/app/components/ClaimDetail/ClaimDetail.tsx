@@ -224,9 +224,11 @@ const ClaimDetail: React.FunctionComponent<ClaimProps> = () => {
             </Button>
           </FlexItem>
         </Flex>
-        <Flex className={isChatOpen ? 'chat-fadeIn' : 'chat-fadeOut'}>
-          <FlexItem className='chat-panel'><Chat claimSummary={claim.summary} claimId={claim_id} inceptionDate={claim.inception_date}/></FlexItem>
-        </Flex>
+        {isChatOpen && (
+          <Flex className='chat-fadeIn'>
+            <FlexItem className='chat-panel'><Chat claimSummary={claim.summary} claimId={claim_id} inceptionDate={claim.inception_date}/></FlexItem>
+          </Flex>
+        )}
       </PageSection>
     </Page>
   );
