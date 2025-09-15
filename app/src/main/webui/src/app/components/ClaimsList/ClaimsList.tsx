@@ -17,43 +17,46 @@ interface Row {
 
 const ClaimsList: React.FunctionComponent = () => {
 
-    // Claims data
-    const [claims, setClaims] = React.useState<any[]>([]);
+    // Mock data for when backend is not available
+    const mockClaims = [
+        {
+            id: 1,
+            claim_number: "CLM-2024-001",
+            category: "Auto",
+            client_name: "John Doe",
+            policy_number: "POL-AUTO-12345",
+            status: "In Review"
+        },
+        {
+            id: 2,
+            claim_number: "CLM-2024-002",
+            category: "Home",
+            client_name: "Jane Smith",
+            policy_number: "POL-HOME-67890",
+            status: "Approved"
+        },
+        {
+            id: 3,
+            claim_number: "CLM-2024-003",
+            category: "Auto",
+            client_name: "Bob Johnson",
+            policy_number: "POL-AUTO-54321",
+            status: "Pending"
+        }
+    ];
+
+    // Claims data - Initialize with mock data to prevent rendering issues
+    const [claims, setClaims] = React.useState<any[]>(mockClaims);
     const [isLoading, setIsLoading] = React.useState(true);
     const [hasError, setHasError] = React.useState(false);
 
     React.useEffect(() => {
-        // Mock data for when backend is not available
-        const mockClaims = [
-            {
-                id: 1,
-                claim_number: "CLM-2024-001",
-                category: "Auto",
-                client_name: "John Doe",
-                policy_number: "POL-AUTO-12345",
-                status: "In Review"
-            },
-            {
-                id: 2,
-                claim_number: "CLM-2024-002",
-                category: "Home",
-                client_name: "Jane Smith",
-                policy_number: "POL-HOME-67890",
-                status: "Approved"
-            },
-            {
-                id: 3,
-                claim_number: "CLM-2024-003",
-                category: "Auto",
-                client_name: "Bob Johnson",
-                policy_number: "POL-AUTO-54321",
-                status: "Pending"
-            }
-        ];
 
         axios.get(config.backend_api_url + '/db/claims')
             .then(response => {
-                setClaims(response.data);
+                // Ensure response.data is an array
+                const claimsData = Array.isArray(response.data) ? response.data : [];
+                setClaims(claimsData);
                 setIsLoading(false);
             })
             .catch(error => {
@@ -65,7 +68,7 @@ const ClaimsList: React.FunctionComponent = () => {
             });
     }, []);
 
-    const rows: Row[] = claims.map((claim: any) => ({
+    const rows: Row[] = (Array.isArray(claims) ? claims : []).map((claim: any) => ({
         id: claim.id,
         claim_number: claim.claim_number,
         category: claim.category,
