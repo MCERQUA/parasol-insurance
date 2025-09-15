@@ -40,13 +40,13 @@ const routes: AppRouteConfig[] = [
   {
     component: Empty,
     label: 'Dashboard',
-    path: '#',
+    path: '/dashboard',
     title: 'Dashboard'
   },
   {
     component: Empty,
     label: 'Policies',
-    path: '#',
+    path: '/policies',
     title: 'Policies'
   },
   {
@@ -65,25 +65,25 @@ const routes: AppRouteConfig[] = [
   {
     component: Empty,
     label: 'Coverages',
-    path: '#',
+    path: '/coverages',
     title: 'Coverages'
   },
   {
     component: Empty,
     label: 'Annuities',
-    path: '#',
+    path: '/annuities',
     title: 'Annuities'
   },
   {
     component: Empty,
     label: 'Subscriptions',
-    path: '#',
+    path: '/subscriptions',
     title: 'Subscriptions'
   },
   {
     component: Empty,
     label: 'Reports',
-    path: '#',
+    path: '/reports',
     title: 'Reports'
   },
   // {
@@ -96,13 +96,13 @@ const routes: AppRouteConfig[] = [
   {
     component: Empty,
     label: 'Admin',
-    path: '#',
+    path: '/admin',
     title: 'Admin'
   },
   {
     component: Empty,
     label: 'Settings',
-    path: '#',
+    path: '/settings',
     title: 'Settings'
   },
   {
