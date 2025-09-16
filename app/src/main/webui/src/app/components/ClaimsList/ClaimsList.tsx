@@ -197,8 +197,8 @@ const ClaimsList: React.FunctionComponent = () => {
 
     // Since OnSort specifies sorted columns by index, we need sortable values for our object by column index.
     const getSortableRowValues = (row: Row): (string | number)[] => {
-        const { id, claim_number, category, client_name, policy_number, status } = row;
-        return [id, claim_number, category, client_name, policy_number, status];
+        const { id, claim_number, category, client_name, amount, fraud_score, status } = row;
+        return [id, claim_number, category, client_name, amount || 0, fraud_score || 0, status];
     };
 
     // Note that we perform the sort as part of the component's render logic and not in onSort.
@@ -300,9 +300,10 @@ const ClaimsList: React.FunctionComponent = () => {
                             className="claims-list-filter-select"
                         >
                             <FormSelectOption key={0} value="Any category" label="Any category" />
-                            <FormSelectOption key={1} value="Single vehicle" label="Single vehicle" />
-                            <FormSelectOption key={2} value="Multiple vehicle" label="Multiple vehicle" />
-                            <FormSelectOption key={3} value="Theft" label="Theft" />
+                            <FormSelectOption key={1} value="Auto" label="Auto" />
+                            <FormSelectOption key={2} value="Home" label="Home" />
+                            <FormSelectOption key={3} value="Health" label="Health" />
+                            <FormSelectOption key={4} value="Life" label="Life" />
                         </FormSelect>
                     </FlexItem>
                     <FlexItem>
@@ -314,10 +315,10 @@ const ClaimsList: React.FunctionComponent = () => {
                             className="claims-list-filter-select"
                         >
                             <FormSelectOption key={0} value="Any status" label="Any status" />
-                            <FormSelectOption key={1} value="New" label="New" />
-                            <FormSelectOption key={2} value="In Process" label="In Process" />
-                            <FormSelectOption key={3} value="Processed" label="Processed" />
-                            <FormSelectOption key={4} value="Denied" label="Denied" />
+                            <FormSelectOption key={1} value="Approved" label="Approved" />
+                            <FormSelectOption key={2} value="Processing" label="Processing" />
+                            <FormSelectOption key={3} value="Flagged" label="Flagged" />
+                            <FormSelectOption key={4} value="Under Investigation" label="Under Investigation" />
                         </FormSelect>
                     </FlexItem>
                 </Flex>

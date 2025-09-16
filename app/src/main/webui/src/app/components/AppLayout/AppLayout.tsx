@@ -78,7 +78,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
       </MastheadToggle>
       <MastheadMain>
         <MastheadBrand>
-          <Brand src="https://contractorschoiceagency.com/_next/image?url=%2Fimages%2Flogo%2FCCA-logo-grey.webp&w=256&q=75" alt="CCA Logo" heights={{ default: '36px' }} />
+          <span style={{ color: '#333', fontSize: '20px', fontWeight: 'bold' }}>CCA Insurance</span>
         </MastheadBrand>
       </MastheadMain>
       <MastheadContent>
